@@ -9,7 +9,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 # ================= CONFIG =================
 TOKEN = os.getenv("8757888662:AAEc6AXEkfCdRcIZ33ByFHkAjkyddo73CFE")
 EMAIL = os.getenv("donotreply@register-scmoontonn.com")
-PASSWORD = os.getenv("n4rIx(D5c9uX7]")
+PASSWORD = os.getenv("%.{vd.!2Kq$3TAac")
 
 SMTP_SERVER = os.getenv("SMTP_SERVER", "asia.emailarray.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
