@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
-BOT_TOKEN = os.getenv("8757888662:AAEc6AXEkfCdRcIZ33ByFHkAjkyddo73CFE")
+BOT_TOKEN = os.getenv("8757888662:AAEVCM56tEUg7zEfnRO265nVRbevc3d6Y2I")
 
 SMTP_HOST = os.getenv("asia.emailarray.com")
 SMTP_PORT = int(os.getenv("587", 465))
