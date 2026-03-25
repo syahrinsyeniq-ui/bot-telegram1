@@ -1,84 +1,99 @@
+import os
+import logging
+import smtplib
+from email.mime.text import MIMEText
+
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-import smtplib
-import logging
 
-# CONFIG
-TOKEN = "8757888662:AAEc6AXEkfCdRcIZ33ByFHkAjkyddo73CFE"
-EMAIL = "donotreply@register-scmoontonn.com"
-PASSWORD = "n4rIx(D5c9uX7]zF"
-SMTP_SERVER = "asia.emailarray.com"
-SMTP_PORT = 587
+# ================= CONFIG =================
+TOKEN = os.getenv("8757888662:AAEc6AXEkfCdRcIZ33ByFHkAjkyddo73CFE")
+EMAIL = os.getenv("donotreply@register-scmoontonn.com")
+PASSWORD = os.getenv("n4rIx(D5c9uX7]")
 
-AUTHORIZED_USERS = [6694565529]  # ganti dengan ID Telegram kamu
+SMTP_SERVER = os.getenv("SMTP_SERVER", "asia.emailarray.com")
+SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
 
-# LOGGING
+AUTHORIZED_USERS = [66945655]  # ganti dengan ID kamu
+
+# ================= LOG =================
 logging.basicConfig(level=logging.INFO)
 
-# FUNCTION CEK USER
+# ================= TEMPLATE PESAN =================
+def get_auto_message():
+    return """
+Halo,
+
+Ini adalah pesan otomatis dari sistem.
+
+Mohon abaikan jika tidak relevan dengan Anda.
+
+Terima kasih.
+"""
+
+# ================= CEK USER =================
 def is_authorized(user_id):
     return user_id in AUTHORIZED_USERS
 
-# FUNCTION KIRIM EMAIL
-def send_email(to_email, subject, body):
-    msg = f"Subject: {subject}\n\n{body}"
+# ================= SEND EMAIL =================
+def send_email(to_email):
+    subject = "Notifikasi Sistem"
+    body = get_auto_message()
 
-    server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-    server.starttls()
-    server.login(EMAIL, PASSWORD)
-    server.sendmail(EMAIL, to_email, msg)
-    server.quit()
+    msg = MIMEText(body)
+    msg["Subject"] = subject
+    msg["From"] = EMAIL
+    msg["To"] = to_email
 
-# COMMAND START
+    try:
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.starttls()
+        server.login(EMAIL, PASSWORD)
+        server.send_message(msg)
+        server.quit()
+        return True
+    except Exception as e:
+        logging.error(e)
+        return False
+
+# ================= COMMAND =================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Bot aktif ✅")
+    await update.message.reply_text(
+        "Bot aktif ✅\nGunakan:\n/send email@tujuan.com"
+    )
 
-# COMMAND SEND
-async def send(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+async def send_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
 
     if not is_authorized(user_id):
-        await update.message.reply_text("Akses ditolak ❌")
+        await update.message.reply_text("❌ Akses ditolak")
         return
 
     try:
         to_email = context.args[0]
-        subject = context.args[1]
-        body = " ".join(context.args[2:])
 
-        send_email(to_email, subject, body)
-        await update.message.reply_text("Email terkirim ✅")
+        success = send_email(to_email)
 
-    except:
-        await update.message.reply_text("Format salah!\n/send email subject pesan")
-
-# COMMAND BROADCAST
-async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
-
-    if not is_authorized(user_id):
-        await update.message.reply_text("Akses ditolak ❌")
-        return
-
-    try:
-        emails = context.args[0].split(",")
-        subject = context.args[1]
-        body = " ".join(context.args[2:])
-
-        for email in emails:
-            send_email(email.strip(), subject, body)
-
-        await update.message.reply_text("Broadcast berhasil 🚀")
+        if success:
+            await update.message.reply_text("✅ Email terkirim")
+        else:
+            await update.message.reply_text("❌ Gagal kirim email")
 
     except:
-        await update.message.reply_text("Format:\n/broadcast email1,email2 subject pesan")
+        await update.message.reply_text(
+            "Format salah!\n/send email@tujuan.com"
+        )
 
-# INIT BOT
-app = ApplicationBuilder().token(TOKEN).build()
+# ================= RUN =================
+def main():
+    app = ApplicationBuilder().token(TOKEN).build()
 
-app.add_handler(CommandHandler("start", start))
-app.add_handler(CommandHandler("send", send))
-app.add_handler(CommandHandler("broadcast", broadcast))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("send", send_cmd))
 
-print("Bot berjalan...")
-app.run_polling()
+    print("Bot berjalan...")
+    app.run_polling()
+
+if name == "__main__":
+    main()
