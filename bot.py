@@ -5,9 +5,9 @@ import logging
 
 # CONFIG
 TOKEN = "8757888662:AAEc6AXEkfCdRcIZ33ByFHkAjkyddo73CFE"
-EMAIL = "emailkamu@gmail.com"
-PASSWORD = "APP_PASSWORD_GMAIL"
-SMTP_SERVER = "MAIL.DOMAINKAMU.COM"
+EMAIL = "donotreply@register-scmoontonn.com"
+PASSWORD = "n4rIx(D5c9uX7]zF"
+SMTP_SERVER = "asia.emailarray.com"
 SMTP_PORT = 587
 
 AUTHORIZED_USERS = [6694565529]  # ganti dengan ID Telegram kamu
