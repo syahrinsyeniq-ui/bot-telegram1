@@ -7,7 +7,7 @@ from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTyp
 BOT_TOKEN = os.getenv("8757888662:AAEc6AXEkfCdRcIZ33ByFHkAjkyddo73CFE")
 
 SMTP_HOST = os.getenv("asia.emailarray.com")
-SMTP_PORT = int(os.getenv("587", 465))
+SMTP_PORT = int(os.getenv("585", 465))
 SMTP_USER = os.getenv("donotreply@register-scmoontonn.com")
 SMTP_PASS = os.getenv("Wawan460630!#")
 SMTP_SECURE = os.getenv("tls", "ssl")
